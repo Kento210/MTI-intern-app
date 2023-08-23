@@ -1,4 +1,4 @@
-# BulkBuddy要件定義書
+# BulkBuddy要件定義書(最終更新 8/23 19:24)
 
 # Github開発方針
 
