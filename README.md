@@ -36,7 +36,7 @@ Mainブランチが外部に公開する最新プロダクトとして更新さ�
 → category：食事内容、トレーニング内容
 
 - 強制有料プラン（7days）
-- フロント、バック担当は一緒
+- フロント、バック担当は3日目と一緒
 
 ### API Gateway情報
 URL: https://52cypecucj.execute-api.ap-northeast-1.amazonaws.com
