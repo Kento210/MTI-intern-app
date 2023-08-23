@@ -9,7 +9,9 @@
 
 ## ブランチ
 - main: 現在デプロイされているプロダクト
-- develope/[Github名]/[開発の概要][IssueID]: 開発中バージョンの中心
+- develope: 開発中バージョンの中心
+
+- develope/[Github名]/[開発の概要][IssueID]: 実用ブランチ例
 
 例: `develope/Kento210/fix_id#1`
 
