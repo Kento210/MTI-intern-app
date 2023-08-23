@@ -14,6 +14,9 @@
 - 強制有料プラン（7days）
 - フロント、バック担当は一緒
 
+## Figmaリンク
+https://www.figma.com/file/YmrmPtm4u0zza8keNnLgQz/BulkBuddy?type=design&node-id=0%3A1&mode=design&t=aclGlTrtZTLTXDxm-1
+
 ### 目標設定機能
 
 - 目標カロリーの設定
