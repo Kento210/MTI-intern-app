@@ -159,10 +159,10 @@ category=3は"コラム"
 |  |  |  | likePost | number (0) |  |  |  |
 | GET | /article/search | 検索 | userId | string |  | userId | string |
 |  |  |  | category | string |  | name | string |
-|  |  |  | likepost | number |  | text | string |
+|  |  |  | likepost_search | number |  | text | string |
 |  |  |  |  |  |  | category | string |
 |  |  |  |  |  |  | reply | array (0) |
-|  |  |  |  |  |  | likePost_search | number (0) |
+|  |  |  |  |  |  | likePost | number (0) |
 | GET | /article | 表示 |  |  |  | articles | array |
 | GET | /article/free | 制限表示 |  |  |  | articles | array |
 | DELETE | /article | 削除 | userId | string | ○ | エラー401 |  |
