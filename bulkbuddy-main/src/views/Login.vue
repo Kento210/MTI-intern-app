@@ -20,20 +20,22 @@
         <!-- submitイベントを拾って、preventにて規定のアクションを中止し、submitメソッドを呼び出す。-->
         <form class="ui large form" @submit.prevent="submit">
           <h3 class="ui centered header title-text">
-            ログイン
+            {{ toggledTitleText }} <br> {{ toggledSubTitleText }}
           </h3>
-
-          <p>ユーザー名</p>
+          
           <div class="field">
+            <p>ユーザー名</p>
             <input v-model="user.userId" type="text" placeholder="ユーザー名を入力" />
           </div>
 
-          <p>パスワード</p>
+          
           <div class="field">
+            <p>パスワード</p>
             <input v-model="user.password" type="password" placeholder="パスワードを入力" />
           </div>
 
           <div class="field" v-if="!isLogin">
+            <p>ユーザー名</p>
             <i class="tag icon"></i>
             <input v-model="user.nickname" type="text" placeholder="Nickname" />
           </div>
@@ -102,13 +104,21 @@
           !userId || !password :
           !userId || !password || !nickname || !age;
       },
-
+      
+      toggledTitleText() {
+        return this.isLogin ? 'ログイン' : '目標設定には新規登録が必要です'
+      },
+      
+      toggledSubTitleText() {
+        return this.isLogin ? '' : 'あなたについて教えてください'
+      },
+      
       submitBtnText() {
         return this.isLogin ? 'ログイン' : '新規登録'
       },
 
       toggledBtnText() {
-        return this.isLogin ? '新規登録' : 'ログイン'
+        return this.isLogin ? '新規登録はこちら' : 'ログインはこちら'
       }
     },
 
@@ -174,11 +184,13 @@
   background-color: #F68712;
   color: white;
   width: 25%;
+  margin: 20px;
 }
 .grey-button {
   background-color: #333;
   color: white;
-  width: 25%;
+  width: 24%;
+  margin: 20px;
 }
 .title-text {
   padding: 20px;
