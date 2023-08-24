@@ -24,54 +24,72 @@
       </div>
 
       <div class="ui segment">
-        <!-- 発展課題のエラーメッセージ用-->
+        <!-- エラーメッセージ-->
         <p class="ui negative message" v-if="errorMsg">
           <i class="close icon" @click="clearMsg('error')"></i>
           <span class="header">エラーが発生しました！</span>
           {{ errorMsg }}
         </p>
 
-        <!-- 発展課題の成功メッセージ用-->
+        <!-- 成功メッセージ-->
         <p class="ui positive message" v-if="successMsg">
           <i class="close icon" @click="clearMsg"></i>
           <span class="header">完了しました！</span>
           {{ successMsg }}
         </p>
 
-        <!-- 更新情報入力用フォーム -->
+        <!-- 更新情報入力フォーム -->
         <form class="ui large form" @submit.prevent="submit">
+          <h3 class="ui centered header title-text">
+            ユーザー情報の編集
+          </h3>
+
           <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input v-model="user.userId" type="text" placeholder="ID" required disabled />
-            </div>
+            <label>目標体重</label>
+            <input v-model="user.targetWeight" type="number" min="30" placeholder="目標体重の数字を入力" />
           </div>
 
           <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input v-model="user.password" type="password" placeholder="Password" />
-            </div>
+            <label>ユーザー名(英数字)</label>
+            <input v-model="user.userId" type="text" placeholder="ユーザー名を入力" />
+          </div>
+
+          <div class="field" v-if="!isLogin">
+            <label>ニックネーム</label>
+            <input v-model="user.name" type="text" placeholder="ニックネームを入力" />
           </div>
 
           <div class="field">
-            <div class="ui left icon input">
-              <i class="tag icon"></i>
-              <input v-model="user.nickname" type="text" placeholder="Nickname" />
-            </div>
+            <label>パスワード</label>
+            <input v-model="user.password" type="password" placeholder="パスワードを入力" />
           </div>
 
           <div class="field">
-            <div class="ui left icon input">
-              <i class="calendar icon"></i>
-              <input v-model.number="user.age" type="number" min="0" placeholder="Age" />
-            </div>
+            <label>身長 (cm)</label>
+            <input v-model.number="user.height" type="number" min="100" max="250" placeholder="身長" />
           </div>
 
-          <button class="ui huge green fluid button" v-bind:disabled="isButtonDisabled" type="submit">更新</button>
+          <!--<div class="field">-->
+          <!--  <div class="ui left icon input">-->
+          <!--    <i class="calendar icon"></i>-->
+          <!--    <input v-model.number="user.age" type="number" min="0" placeholder="Age" />-->
+          <!--  </div>-->
+          <!--</div>-->
+          
+          <div class="ui centered grid">
+            <div class="center aligned column">
+              <button class="ui button orange-button"  v-bind:disabled="isButtonDisabled" type="submit">更新</button>
+            </div>
+          </div>
         </form>
       </div>
-      <button @click="deleteUser" class="ui huge grey fluid button" type="submit">退会</button>
+      
+      <div class="ui centered grid">
+        <div class="center aligned column">
+          <button @click="deleteUser" class="ui button grey-button" type="submit">退会</button>
+        </div>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -82,7 +100,7 @@
   // import something from '@/components/something.vue';
   import { baseUrl } from '@/assets/config.js';
 
-  const headers = { 'Authorization': 'mtiToken' };
+  // const headers = { 'Authorization': 'mtiToken' };
 
   export default {
     name: 'Profile',
@@ -96,9 +114,10 @@
       return {
         user: {
           userId: window.localStorage.userId,
+          targetWeight: null,
+          name: null,
           password: null,
-          nickname: null,
-          age: null
+          height: null,
         },
         errorMsg: '', // 発展課題のエラーメッセージ用
         successMsg: '', //発展課題の成功メッセージ用
@@ -109,14 +128,20 @@
     computed: {
       // 計算した結果を変数として利用したいときはここに記述する
       isButtonDisabled() {
-        const { userId, password, nickname, age } = this.user;
-        return !userId || !password || !nickname || !age;
+        const { 
+          userId,
+          targetWeight,
+          name,
+          password,
+          height,
+          } = this.user;
+        return !userId || !targetWeight || !name || !password || !height;
       },
     },
 
     methods: {
       // Vue.jsで使う関数はここで記述する
-      // 発展課題のエラー・成功メッセージ用
+      // エラー・成功メッセージ
       clearMsg(target) {
         if (target === 'error') {
           this.errorMsg = '';
@@ -132,12 +157,20 @@
         }
         this.isCallingApi = true;
 
-        const { userId, password, nickname, age } = this.user;
+        const {
+          userId,
+          targetWeight,
+          name,
+          password,
+          height,
+        } = this.user;
+        
         const reqBody = {
           userId,
+          targetWeight,
+          name,
           password,
-          nickname,
-          age
+          height,
         };
 
         try {
@@ -145,7 +178,7 @@
           const res = await fetch(baseUrl + '/user', {
             method: 'PUT',
             body: JSON.stringify(reqBody),
-            headers
+            // headers
           });
 
           const text = await res.text();
@@ -158,6 +191,7 @@
           }
 
           this.successMsg = 'ユーザー更新処理が完了しました'
+          
         }
         catch (e) {
           this.errorMsg = `ユーザー更新時にエラーが発生しました: ${e}`;
@@ -177,7 +211,7 @@
           /* global fetch */
           const res = await fetch(`${baseUrl}/user?userId=${this.user.userId}`, {
             method: 'DELETE',
-            headers
+            // headers
           });
 
           const text = await res.text();
@@ -209,7 +243,7 @@
         /* global fetch */
         const res = await fetch(baseUrl + `/user?userId=${this.user.userId}`, {
           method: 'GET',
-          headers
+          // headers
         });
 
         const text = await res.text();
@@ -239,10 +273,28 @@
   .vertical-align-parent {
     position: relative;
   }
-  
+
   .vertical-align-child {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+  }
+  
+  .orange-button {
+    background-color: #F68712;
+    color: white;
+    width: 25%;
+    margin: 20px;
+  }
+
+  .grey-button {
+    background-color: #333;
+    color: white;
+    width: 24%;
+    margin: 20px;
+  }
+
+  .title-text {
+    padding: 20px;
   }
 </style>
