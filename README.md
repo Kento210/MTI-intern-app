@@ -57,7 +57,7 @@ URL: [https://52cypecucj.execute-api.ap-northeast-1.amazonaws.com](https://52cyp
 
 - 目標カロリーの設定
 - 初回ログイン時のアンケート機能
-- gender `1 = 男  2 = 女  3 = その他`
+- gender `1 = 男 2 = 女 3 = その他`
 
 →基本アンケート項目
 
@@ -98,10 +98,12 @@ Userテーブル（id（プライマリーキー）、名前、パスワード�
 |  |  |  | password | string | ○ |  |  |
 |  |  |  | height | number | ○ | height | number |
 |  |  |  | weight | number | ○ | weight | number |
-|  |  |  | age | number | ○ | age | number |
+|  |  |  | birth_year | number | ○ | birth_year | number |
+|  |  |  | birth_month | number | ○ | birth_month | number |
+|  |  |  | birth_day | number | ○ | birth_day | number |
 |  |  |  |  |  |  | calorie | number |
 |  |  |  | targetWeight | number |  | targetWeight | number |
-|  |  |  | targetDate | number |  | targetData | number |
+|  |  | アドバンス | targetDate | number |  | targetData | number |
 |  |  |  | gender | number | ○ |  |  |
 |  |  |  |  |  |  | token | string |
 | POST | /user/login | ユーザの認証 | userId | string | ○ | token | string |
