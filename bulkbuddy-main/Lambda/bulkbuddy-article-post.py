@@ -20,7 +20,7 @@ def lambda_handler(event, context):
         name = body['name']
         text = body['text']
         
-        category = body.get('category', '')
+        category = body.get('category', 0)
         reply = body.get('reply', [])
         likepost = 0  # 固定
         
