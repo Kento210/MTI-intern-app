@@ -25,7 +25,7 @@
 
           <div class="field" v-if="!isLogin">
             <label>目標体重</label>
-            <input v-model="user.nickname" type="number" min="30" placeholder="目標体重の数字を入力" />
+            <input v-model="user.targetWeight" type="number" min="30" placeholder="目標体重の数字を入力" />
             <!--右側にkgの表示をつけることもできるが高さの修正方法が不明-->
             <!--<div class="ui right labeled input">-->
             <!--  <input type="text" placeholder="Enter weight..">-->
@@ -36,8 +36,13 @@
           </div>
 
           <div class="field">
-            <label>ユーザー名</label>
+            <label>ユーザー名(英数字を推奨)</label>
             <input v-model="user.userId" type="text" placeholder="ユーザー名を入力" />
+          </div>
+
+          <div class="field" v-if="!isLogin">
+            <label>ニックネーム</label>
+            <input v-model="user.name" type="text" placeholder="ニックネームを入力" />
           </div>
 
 
@@ -64,13 +69,13 @@
             <label>生年月日</label>
             <div class="fields">
               <div class="field">
-                <input v-model="year" type="number" min="1950" max="2023" placeholder="年" />
+                <input v-model="user.birth_year" type="number" min="1950" max="2023" placeholder="年" />
               </div>
               <div class="field">
-                <input v-model="month" type="number" min="1" max="12" placeholder="月" />
+                <input v-model="user.birth_month" type="number" min="1" max="12" placeholder="月" />
               </div>
               <div class="field">
-                <input v-model="day" type="number" min="1" max="31" placeholder="日" />
+                <input v-model="user.birth_day" type="number" min="1" max="31" placeholder="日" />
               </div>
             </div>
           </div>
@@ -78,11 +83,11 @@
           <div class="fields" v-if="!isLogin">
             <div class="field">
               <label>身長 (cm)</label>
-              <input v-model.number="height" type="number" min="100" max="250" placeholder="身長" />
+              <input v-model.number="user.height" type="number" min="100" max="250" placeholder="身長" />
             </div>
             <div class="field">
               <label>体重 (kg)</label>
-              <input v-model.number="weight" type="number" min="30" placeholder="体重" />
+              <input v-model.number="user.weight" type="number" min="30" placeholder="体重" />
             </div>
           </div>
 
@@ -123,25 +128,59 @@
         isLogin: true,
         user: {
           userId: null,
+          name: null,
           password: null,
-          nickname: null,
-          age: null
-          // 男性は0女性1
+          height: null,
+          weight: null,
+          birth_year: null,
+          birth_month: null,
+          birth_day: null,
+          targetWeight: null,
+          // targetDate: null,
+          // 男性は0女性は1
+          gender: null,
         },
         errorMsg: '', // 発展課題のエラーメッセージ用
         isCallingApi: false // 発展課題のローディング表示用
       };
     },
 
+    // selectedOptionが変更される度に呼ばれるので、genderに値が入る
+    watch: {
+      selectedOption(newValue) {
+        // selectedOptionの値に基づいてgenderを更新
+        this.user.gender = newValue === 'male' ? 1 : 2;
+        console.log("変更しました")
+      }
+    },
+
     computed: {
       // 計算した結果を変数として利用したいときはここに記述する
 
-      // 発展課題のボタン活性/非活性用
+      // ボタン活性/非活性用
       isButtonDisabled() {
-        const { userId, password, nickname, age } = this.user;
+        const {
+          userId,
+          name,
+          password,
+          height,
+          weight,
+          birth_year,
+          birth_month,
+          birth_day,
+          targetWeight,
+          gender
+        } = this.user;
+
         return this.isLogin ?
           !userId || !password :
-          !userId || !password || !nickname || !age;
+          !userId || !name || !password || !height || !weight || !birth_year || !birth_month || !birth_day || !targetWeight || gender;
+      },
+
+      gender() {
+        // selectedOptionの値に基づいて男性は1、女性は2を返す
+        return this.selectedOption === 'male' ? 1 : 2;
+        console.log("性別を返しました")
       },
 
       toggledTitleText() {
@@ -165,7 +204,7 @@
     methods: {
       // Vue.jsで使う関数はここで記述する
 
-      // 発展課題のエラーメッセージ用
+      // エラーメッセージ
       clearError() {
         this.errorMsg = ''
       },
@@ -181,8 +220,34 @@
         this.isCallingApi = true;
 
         const path = this.isLogin ? '/user/login' : '/user/signup';
-        const { userId, password, nickname, age } = this.user;
-        const reqBody = this.isLogin ? { userId, password } : { userId, password, nickname, age };
+
+        const {
+          userId,
+          name,
+          password,
+          height,
+          weight,
+          birth_year,
+          birth_month,
+          birth_day,
+          targetWeight,
+          gender
+        } = this.user;
+        
+        const reqBody = this.isLogin ? { userId, password } : {
+          userId,
+          name,
+          password,
+          height,
+          weight,
+          birth_year,
+          birth_month,
+          birth_day,
+          targetWeight,
+          gender: this.gender
+        };
+
+        console.log(reqBody)
 
         try {
           /* global fetch */
@@ -200,10 +265,11 @@
             throw new Error(errorMessage);
           }
 
-          window.localStorage.setItem('token', jsonData.token);
+          // window.localStorage.setItem('token', jsonData.token);
           window.localStorage.setItem('userId', this.user.userId);
 
           this.$router.push({ name: 'Home' });
+          console.log(jsonData)
         }
         catch (e) {
           console.error(e);
