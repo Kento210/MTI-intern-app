@@ -1,4 +1,4 @@
-# BulkBuddy要件定義書(最終更新 8/24 12:42)
+# BulkBuddy要件定義書(最終更新 8/25 2:10)
 
 # Github開発方針
 
@@ -117,23 +117,21 @@ Userテーブル（id（プライマリーキー）、名前、パスワード�
 |  |  |  |  |  |  | targetWeight | number |
 |  |  |  |  |  |  | targetDate | number |
 |  |  |  |  |  |  | gender | number |
-| PUT | /user | ユーザ情報の更新 | userId | string |  | userId | string |
+| PUT | /user | ユーザ情報の更新 | userId | string | ○ | userId | string |
 |  |  |  | name | string |  | name | string |
 |  |  |  | password | string |  |  |  |
 |  |  |  | height | number |  | height | number |
 |  |  |  | weight | number |  | weight | number |
-|  |  |  | age | number |  | age | number |
-|  |  |  |  |  |  | calorie | number |
+|  |  |  | birth_year | number |  | birth_year | number |
+|  |  |  | birth_month | number |  | birth_month | number |
+|  |  |  | birth_day | number |  | birth_day | number |
 |  |  |  | targetWeight | number |  | targetWeight | number |
 |  |  |  | targetDate | number |  | targetData | number |
 |  |  |  | gender | number |  | gender | number |
-| DELETE | /user | ユーザの削除 | userId | string | ○ | エラー401 |  |
+| DELETE | /user | ユーザの削除 | userId | string | ○ | success 200 |  |
 | PUT | /user/record | カロリーの登録 | userId | string | ○ | userId | string |
-|  |  |  | date | number | ○ | date | number |
 |  |  |  | calorie | number | ○ | calorie | number |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
+|  |  |  | timestamp | number | （サーバ） | timestamp | number |
 
 ### コミュニティ機能
 
@@ -165,11 +163,8 @@ category=3は"コラム"
 |  |  |  |  |  |  | likePost | number (0) |
 | GET | /article | 表示 |  |  |  | articles | array |
 | GET | /article/free | 制限表示 |  |  |  | articles | array |
-| DELETE | /article | 削除 | userId | string | ○ | エラー401 |  |
+| DELETE | /article | 削除 | userId | string | ○ | success 200 |  |
 |  |  |  | timestamp | number | ○ |  |  |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
 
 ### コラム機能 = SNS
 
