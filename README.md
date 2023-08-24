@@ -1,24 +1,27 @@
-# BulkBuddy要件定義書(最終更新 8/24 10:50)
+# BulkBuddy要件定義書(最終更新 8/24 )
 
 # Github開発方針
 
 ## 開発ルール
+
 開発を行う際は下記のブランチルールに従う
 
 また、常に最新のdevelopeブランチの状態になるようmerge処理を行う
 
 ## ブランチ
+
 - main: 現在デプロイされているプロダクト
 - develope: 開発中バージョンの中心
-
 - develope/[Github名]/[開発の概要][IssueID]: 実用ブランチ例
 
 例: `develope/Kento210/fix_id#1`
 
 ### Issueについて
+
 作業する内容についてIssueを作成して作業するものとする。
 
 ### PRについて
+
 各開発が終了した際はdevelopeブランチへPRを出すものとする。
 
 また、PRを出した場合は各個人が自己レビューを行う。
@@ -26,12 +29,13 @@
 PR申請者以外がレビューを行い問題ないと判断された場合はMerge処理を行う
 
 ### デブロイについて
+
 Mainブランチが外部に公開する最新プロダクトとして更新された際にデブロイ作業を行うものとする.
 
 # 基本情報
 
 - 設計方針：基本機能（無料機能から作っていく）
-- ログイン必須（コラム無料だけ開放）
+- ログイン必須（sns無料は）
 - team1_Userテーブル（id、名前、パスワード、身長、体重、年齢、消費カロリー、目標体重、目標期日）
 - team1_Snsテーブル（id、名前、タイムスタンプ、内容、返信、いいね（ソートキー）、カテゴリー）
 
@@ -41,16 +45,19 @@ Mainブランチが外部に公開する最新プロダクトとして更新さ�
 - フロント、バック担当は3日目と一緒
 
 ### API Gateway情報
-URL: https://52cypecucj.execute-api.ap-northeast-1.amazonaws.com
+
+URL: [https://52cypecucj.execute-api.ap-northeast-1.amazonaws.com](https://52cypecucj.execute-api.ap-northeast-1.amazonaws.com/)
 名前: angels-bulkbuddy-api
 
 ### Figmaリンク
-https://www.figma.com/file/YmrmPtm4u0zza8keNnLgQz/BulkBuddy?type=design&node-id=0%3A1&mode=design&t=aclGlTrtZTLTXDxm-1
+
+[https://www.figma.com/file/YmrmPtm4u0zza8keNnLgQz/BulkBuddy?type=design&node-id=0%3A1&mode=design&t=aclGlTrtZTLTXDxm-1](https://www.figma.com/file/YmrmPtm4u0zza8keNnLgQz/BulkBuddy?type=design&node-id=0%3A1&mode=design&t=aclGlTrtZTLTXDxm-1)
 
 ### 目標設定機能
 
 - 目標カロリーの設定
 - 初回ログイン時のアンケート機能
+- gender `1 = 男  2 = 女  3 = その他`
 
 →基本アンケート項目
 
@@ -71,6 +78,7 @@ https://www.figma.com/file/YmrmPtm4u0zza8keNnLgQz/BulkBuddy?type=design&node-id=
 5. 結果の表示（〇〇コースで、〇〇までに、〇〇kg、一日の摂取カロリー、朝昼晩の摂取カロリー）
 
 ### 記録管理
+
 - その日の体重や摂取カロリーを記録する。
 - 記録した結果から目標体重までの重量や一日に必要な摂取カロリーを表示する。
 
@@ -91,9 +99,10 @@ Userテーブル（id（プライマリーキー）、名前、パスワード�
 |  |  |  | height | number | ○ | height | number |
 |  |  |  | weight | number | ○ | weight | number |
 |  |  |  | age | number | ○ | age | number |
-|  |  |  | calorie | number |  |  |  |
+|  |  |  |  |  |  | calorie | number |
 |  |  |  | targetWeight | number |  | targetWeight | number |
 |  |  |  | targetDate | number |  | targetData | number |
+|  |  |  | gender | number | ○ |  |  |
 |  |  |  |  |  |  | token | string |
 | POST | /user/login | ユーザの認証 | userId | string | ○ | token | string |
 |  |  |  | password | string | ○ |  |  |
@@ -105,21 +114,22 @@ Userテーブル（id（プライマリーキー）、名前、パスワード�
 |  |  |  |  |  |  | calorie | number |
 |  |  |  |  |  |  | targetWeight | number |
 |  |  |  |  |  |  | targetDate | number |
-|  |  |  |  |  |  |  |  |
-| PUT | /user | ユーザ情報の更新 | userId | string | ○ | userId | string |
-|  |  |  | name | string | ○ | name | string |
-|  |  |  | password | string | ○ |  |  |
-|  |  |  | height | number | ○ | height | number |
-|  |  |  | weight | number | ○ | weight | number |
-|  |  |  | age | number | ○ | age | number |
-|  |  |  | calorie | number |  |  |  |
+|  |  |  |  |  |  | gender | number |
+| PUT | /user | ユーザ情報の更新 | userId | string |  | userId | string |
+|  |  |  | name | string |  | name | string |
+|  |  |  | password | string |  |  |  |
+|  |  |  | height | number |  | height | number |
+|  |  |  | weight | number |  | weight | number |
+|  |  |  | age | number |  | age | number |
+|  |  |  |  |  |  | calorie | number |
 |  |  |  | targetWeight | number |  | targetWeight | number |
 |  |  |  | targetDate | number |  | targetData | number |
+|  |  |  | gender | number |  | gender | number |
 | DELETE | /user | ユーザの削除 | userId | string | ○ | エラー401 |  |
-|  |  |  |  |  |  |  |  |
 | PUT | /user/record | カロリーの登録 | userId | string | ○ | userId | string |
 |  |  |  | date | number | ○ | date | number |
 |  |  |  | calorie | number | ○ | calorie | number |
+|  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  |  |  |
 
@@ -143,19 +153,27 @@ Snsテーブル（id（プライマリーキー）、名前、タイムスタン
 |  |  |  | likePost | number (0) |  |  |  |
 | GET | /article/search | 検索 | userId | string |  | userId | string |
 |  |  |  | category | string |  | name | string |
-|  |  |  | likePost | number |  | text | string |
-|  |  |  | timestamp | number |  | category | string |
+|  |  |  | likepost | number |  | text | string |
+|  |  |  |  |  |  | category | string |
 |  |  |  |  |  |  | reply | array (0) |
 |  |  |  |  |  |  | likePost | number (0) |
 | GET | /article | 表示 |  |  |  | articles | array |
-| DELETE | /article | 削除 | userId | string | ○ |  |  |
+| GET | /article/free | 制限表示 |  |  |  | articles | array |
+| DELETE | /article | 削除 | userId | string | ○ | エラー401 |  |
 |  |  |  | timestamp | number | ○ |  |  |
 |  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |
 
-### コラム機能
+### コラム機能 = SNS
 
 - snsテーブルに保存
 - 内容をtokenありとなしで表示方法を変える
+- カテゴリーで検索、userId、いいねのソート
+
+→デフォルト、timestampソート、`likepost = 1`のときいいねソート起動（デフォルトは0）
+
+- 制限版：最新、3件まで
 
 ### Todoリストとリマインダー
 
