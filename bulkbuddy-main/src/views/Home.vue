@@ -1,45 +1,36 @@
 <template>
   <div>
     <div class="ui main container">
-      <!-- 基本的なコンテンツはここに記載する -->
-      <!-- loading表示用 -->
-      <div class="ui active inverted page dimmer" v-if="isCallingApi">
-        <div class="ui text loader">Loading</div>
+      <img class="ui small image" src="../assets/Bulkbuddy_rogo.png" alt="Bulkbuddy_rogo">
+      
+      <!--有料プラン案内-->
+      <div class="ui segment">
+        <ul class="ui comments divided article-list">
+          <h3>有料会員登録</h3>
+          <p>月額324円のお支払いで、Bulkbuddyを利用している他のユーザーと交流が可能なコミュニティ機能を無制限でお使いいただけます。増量仲間をつくりモチベーションを共有しましょう！</p>
+          <button>支払う</button>
+        </ul>
       </div>
-
-      <!-- エラーメッセージ用-->
-      <p class="ui negative message" v-if="errorMsg">
-        <i class="close icon" @click="clearMsg('error')"></i>
-        <span class="header">エラーが発生しました！</span>
-        {{ errorMsg }}
-      </p>
-
-      <!-- 成功メッセージ用-->
-      <p class="ui positive message" v-if="successMsg">
-        <i class="close icon" @click="clearMsg"></i>
-        <span class="header">成功！</span>
-        {{ successMsg }}
-      </p>
-
-      <!-- 投稿ボックス -->
+      
+      <!--投稿機能-->
       <div class="ui segment">
         <form class="ui form" @submit.prevent="postArticle">
           <div class="field">
+            <div class="ui input">
             <textarea
               v-model="post.text"
-              name="article-content"
-              placeholder="あなたの投稿を発信しましょう！"
+              placeholder="増量について発信してみましょう！"
             />
+            </div>
           </div>
-
-          <div class="inline field">
-            <label for="article-category">カテゴリー</label>
-            <input
-              v-model="post.category"
-              type="text"
-              id="article-category"
-              name="article-category"
-            />
+          <div class="field">
+            <label>カテゴリー</label>
+            <select v-model="post.category">
+              <option value="">指定なし</option>
+              <option value="食事">食事</option>
+              <option value="トレーニング">トレーニング</option>
+              <option value="コラム">コラム</option>
+            </select>
           </div>
           <div class="right-align">
             <button
@@ -52,108 +43,39 @@
           </div>
         </form>
       </div>
-
-      <!-- 検索ボックス -->
-      <div class="ui segment">
-        <form class="ui form" @submit.prevent="getSearchedArticles">
-          <div class="field">
-            <label for="userId">ユーザーID</label>
-            <input
-              v-model="search.userId"
-              type="text"
-              id="userId"
-              name="userId"
-              placeholder="ユーザーID"
-            />
-          </div>
-
-          <div class="field">
-            <label for="category">カテゴリー名</label>
-            <input
-              v-model="search.category"
-              type="text"
-              id="category"
-              name="category"
-              placeholder="カテゴリ"
-            />
-          </div>
-
-          <div class="field">
-            <label>投稿日時</label>
-            <div class="inline fields">
-              <div class="field">
-                <input
-                  v-model="search.start"
-                  type="datetime-local"
-                  id="timestampstart"
-                  name="timestampstart"
-                />
-                <label for="timestampstart">から</label>
-              </div>
-
-              <div class="field">
-                <input
-                  v-model="search.end"
-                  type="datetime-local"
-                  id="timestampend"
-                  name="timestampend"
-                />
-                <label for="timestampend">まで</label>
-              </div>
-            </div>
-          </div>
-          <div class="right-align">
-            <button
-              class="ui green button"
-              type="submit"
-              v-bind:disabled="isSearchButtonDisabled"
-            >
-              検索
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- 投稿一覧 -->
+      
+      <!--投稿一覧-->
       <h3 class="ui dividing header">投稿一覧</h3>
       <div class="ui segment">
         <ul class="ui comments divided article-list">
-          <template v-for="(article, index) in articles" :key="index">
-            <li class="comment">
-              <div class="content">
-                <span class="author">{{ article.userId }}</span>
-                <div class="metadata">
-                  <span class="date">{{
-                    convertToLocaleString(article.timestamp)
-                  }}</span>
-                </div>
-                <button
-                  v-if="isMyArticle(article.userId)"
-                  class="ui negative mini button right floated"
-                  @click="deleteArticle(article)"
-                >
-                  削除
-                </button>
-                <p class="text">
-                  {{ article.text }}
-                </p>
-                <span v-if="article.category" class="ui green label">{{
-                  article.category
-                }}</span>
-                <div class="ui divider"></div>
+          <li class="comment" v-for="(article, index) in articles" :key="index">
+            <div class="content">
+              <span class="author">{{ article.userId }}</span>
+              <span class="name">{{ article.name }}</span>
+              <div class="metadata">
+                <span class="date">{{ convertToLocaleString(article.timestamp) }}</span>
               </div>
-            </li>
-          </template>
+              
+              <p class="text">{{ article.text }}</p>
+              <span v-if="article.category !== 0" class="ui green label">{{ (article.category) }}</span>
+              <button
+                class="ui mini button right floated"
+                :class="{ 'positive': article.likepost === 1 }"
+                @click="toggleLike(article)"
+              >
+                いいね {{ article.likepost === 1 ? '済み' : '' }}
+              </button>
+              <div class="ui divider"></div>
+            </div>
+          </li>
         </ul>
       </div>
+      
     </div>
   </div>
 </template>
 
 <script>
-// 必要なものはここでインポートする
-// @は/srcと同じ意味です
-// import something from '@/components/something.vue';
 import { baseUrl } from "@/assets/config.js";
 
 const headers = { Authorization: "mtiToken" };
@@ -172,34 +94,12 @@ export default {
         text: null,
         category: null,
       },
-      search: {
-        userId: null,
-        category: null,
-        start: null,
-        end: null,
-      },
       articles: [],
-      iam: null,
-      successMsg: "",
-      errorMsg: "",
-      isCallingApi: false,
     };
-  },
-
-  computed: {
-    // 計算した結果を変数として利用したいときはここに記述する
-    isPostButtonDisabled() {
-      return !this.post.text;
-    },
-
-    isSearchButtonDisabled() {
-      return !this.search.userId;
-    },
   },
 
   created: async function () {
     // Vue.jsの読み込みが完了したときに実行する処理はここに記述する
-    // apiからarticleを取得する
 
     if (
       window.localStorage.getItem("userId") &&
@@ -214,48 +114,14 @@ export default {
   },
 
   methods: {
-    // Vue.jsで使う関数はここで記述する
-    clearMsg(target) {
-      if (target === "error") {
-        this.errorMsg = "";
-      } else {
-        this.successMsg = "";
-      }
-    },
-
+    
     isMyArticle(id) {
       return this.iam === id;
     },
-
-    async getArticles() {
-      this.isCallingApi = true;
-
-      try {
-        /* global fetch */
-        const res = await fetch(baseUrl + "/articles", {
-          method: "GET",
-          headers,
-        });
-
-        const text = await res.text();
-        const jsonData = text ? JSON.parse(text) : {};
-
-        // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
-        if (!res.ok) {
-          const errorMessage =
-            jsonData.message ?? "エラーメッセージがありません";
-          throw new Error(errorMessage);
-        }
-
-        // 記事がなかった場合undefinedとなり、記事追加時のunshiftでエラーとなるため、空のarrayを代入
-        this.articles = jsonData.articles ?? [];
-      } catch (e) {
-        this.errorMsg = `記事一覧取得時にエラーが発生しました: ${e}`;
-      } finally {
-        this.isCallingApi = false;
-      }
+    isMyArticle(name) {
+      return this.name === name;
     },
-
+    
     async postArticle() {
       if (this.isCallingApi) {
         return;
@@ -263,8 +129,9 @@ export default {
       this.isCallingApi = true;
 
       const reqBody = {
-        userId: this.iam,
-        text: this.post.text,
+        userId: this.iam,            
+        name: this.name,                
+        text: this.post.text,         
         category: this.post.category,
       };
       try {
@@ -284,114 +151,65 @@ export default {
             jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
-
-        this.articles.unshift({ ...reqBody, timestamp: Date.now() });
-        this.successMsg = "記事が投稿されました！";
+        
+        console.log("投稿成功:", jsonData);
         this.post.text = "";
         this.post.category = "";
+        console.log(jsonData);
       } catch (e) {
-        console.error(e);
-        this.errorMsg = e;
-      } finally {
-        this.isCallingApi = false;
+        console.log("error");
       }
     },
-
-    async getSearchedArticles() {
-      if (this.isCallingApi) {
-        return;
-      }
+    
+    async getArticles() {
       this.isCallingApi = true;
-
-      const { userId, category, start, end } = this.search;
-      const startTS = start ? new Date(start).getTime() : "";
-      const endTS = end ? new Date(end).getTime() : "";
-      const qs = `userId=${userId}&category=${
-        category ?? ""
-      }&start=${startTS}&end=${endTS}`;
 
       try {
         /* global fetch */
-        const res = await fetch(baseUrl + `/articles?${qs}`, {
+        const res = await fetch(baseUrl + "/article", {
           method: "GET",
+          // mode: 'cors',
+          // credentials: true,
           headers,
         });
 
-        const text = await res.text();
-        const jsonData = text ? JSON.parse(text) : {};
+        const jsonData = await res.json();
 
-        // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
         if (!res.ok) {
-          const errorMessage =
-            jsonData.message ?? "エラーメッセージがありません";
+          const errorMessage = jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
 
-        this.articles = jsonData.articles;
+        this.articles = jsonData.articles ?? [];
       } catch (e) {
         console.error(e);
-        this.errorMsg = e;
+        this.errorMsg = `記事一覧取得時にエラーが発生しました: ${e}`;
       } finally {
         this.isCallingApi = false;
       }
     },
 
-    async deleteArticle(article) {
-      if (this.isCallingApi) {
-        return;
-      }
-      this.isCallingApi = true;
+    async toggleLike(article) {
+      article.likepost = article.likepost === 1 ? 0 : 1;
 
-      const { userId, timestamp } = article;
       try {
-        /* global fetch */
-        const res = await fetch(
-          `${baseUrl}/article?userId=${userId}&timestamp=${timestamp}`,
-          {
-            method: "DELETE",
-            headers,
-          }
-        );
+        const res = await fetch(`${baseUrl}/like`, {
+          method: "POST",
+          body: JSON.stringify({ userId: this.iam, articleId: article.id, like: article.likepost === 1 }),
+          headers,
+        });
 
-        const text = await res.text();
-        const jsonData = text ? JSON.parse(text) : {};
-
-        // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
-        if (!res.ok) {
-          const errorMessage =
-            jsonData.message ?? "エラーメッセージがありません";
-          throw new Error(errorMessage);
-        }
-
-        const deleted = this.articles.findIndex(
-          (a) => a.userId === userId && a.timestamp === timestamp
-        );
-        this.articles.splice(deleted, 1);
-        this.successMsg = "記事が削除されました！";
+        // 成功時の処理をここに書く
       } catch (e) {
         console.error(e);
-        this.errorMsg = e;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
     convertToLocaleString(timestamp) {
       return new Date(timestamp).toLocaleString();
     },
+
+    // 他のメソッドや計算プロパティはここに記述する
   },
 };
 </script>
-
-<style scoped>
-/* このコンポーネントだけに適用するCSSはここに記述する */
-.article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
-}
-.right-align {
-  text-align: right;
-}
-</style>

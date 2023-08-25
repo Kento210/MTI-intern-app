@@ -1,8 +1,8 @@
 <template>
-  <div class="ui secondary pointing green inverted massive menu" v-if="isMenuNeeded">
+  <div class="ui inverted massive menu" v-if="isMenuNeeded">
     <!-- 基本的なコンテンツはここに記載する -->
     <router-link active-class="active" class="item" exact to="/">Home</router-link>
-    <router-link active-class="active" class="item" to="/user">User</router-link>
+    <router-link active-class="active" class="item" to="/user">Record</router-link>
     <router-link active-class="active" class="item" to="/profile">Profile</router-link>
     <div class="right menu">
       <a @click="logout" class="item">Logout</a>
@@ -47,4 +47,7 @@ export default {
 
 <style scoped>
 /* このコンポーネントだけに適用するCSSはここに記述する */
+.ui.menu {
+  background-color: #3871C1;
+}
 </style>
