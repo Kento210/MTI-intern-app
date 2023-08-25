@@ -2,7 +2,7 @@
   <div class="ui inverted massive menu" v-if="isMenuNeeded">
     <!-- 基本的なコンテンツはここに記載する -->
     <router-link active-class="active" class="item" exact to="/">Home</router-link>
-    <router-link active-class="active" class="item" to="/user">User</router-link>
+    <router-link active-class="active" class="item" to="/user">Record</router-link>
     <router-link active-class="active" class="item" to="/profile">Profile</router-link>
     <div class="right menu">
       <a @click="logout" class="item">Logout</a>
