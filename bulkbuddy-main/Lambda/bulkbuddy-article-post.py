@@ -5,22 +5,23 @@ import datetime
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('team1_sns_test')
 
-def lambda_handler(event, context):
+def handler(event, context):
     try:
         body = json.loads(event['body'])
         
         # 必須パラメータのチェック
-        if 'userId' not in body or 'name' not in body or 'text' not in body:
+        if 'userId' not in body:
             return {
                 'statusCode': 400,
-                'body': json.dumps({'error': 'userId, name, and text are required fields'})
+                'body': json.dumps({'error': 'userId is a required field'})
             }
         
         userId = body['userId']
-        name = body['name']
-        text = body['text']
         
-        category = body.get('category', 0)
+        # オプションのパラメータにデフォルト値を設定
+        name = body.get('name', 'Anonymous')
+        text = body.get('text', '')
+        category = body.get('category', '')
         reply = body.get('reply', [])
         likepost = 0  # 固定
         
