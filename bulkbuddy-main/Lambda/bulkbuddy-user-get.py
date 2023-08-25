@@ -13,8 +13,13 @@ def calculate_age(birth_year, birth_month, birth_day):
 
 def handler(event, context):
     try:
-        body = json.loads(event['body'])
-        userId = body.get('userId', None)
+        # クエリパラメータから userId を取得
+        userId = event['queryStringParameters'].get('userId', None) if event.get('queryStringParameters') else None
+
+        # クエリパラメータがない場合、リクエストボディから userId を取得
+        if userId is None:
+            body = json.loads(event.get('body', '{}'))
+            userId = body.get('userId', None)
         
         if userId is None:
             return {
