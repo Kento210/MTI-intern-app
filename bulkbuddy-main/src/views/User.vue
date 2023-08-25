@@ -4,58 +4,59 @@
       <!-- 基本的なコンテンツはここに記載する -->
 
       <!-- 発展課題のローディング表示用 -->
-      <div class="ui active inverted page dimmer" v-if="isCallingApi">
-        <div class="ui text loader">Loading</div>
-      </div>
+    <!--  <div class="ui active inverted page dimmer" v-if="isCallingApi">-->
+    <!--    <div class="ui text loader">Loading</div>-->
+    <!--  </div>-->
 
       <!-- 発展課題のエラーメッセージ用 -->
-      <p class="ui negative message" v-if="errorMsg">
-        <i class="close icon" @click="clearError"></i>
-        <span class="header">エラーが発生しました！</span>
-        {{ errorMsg }}
-      </p>
+    <!--  <p class="ui negative message" v-if="errorMsg">-->
+    <!--    <i class="close icon" @click="clearError"></i>-->
+    <!--    <span class="header">エラーが発生しました！</span>-->
+    <!--    {{ errorMsg }}-->
+    <!--  </p>-->
 
       <!-- 検索ボックス -->
-      <div class="ui segment">
-        <form class="ui form">
-          <div class="field">
-            <label for="nickname">ユーザー名</label>
-            <input v-model="nickname" type="text" id="nickname" name="nickname" placeholder="Nickname" />
-          </div>
+    <!--  <div class="ui segment">-->
+    <!--    <form class="ui form">-->
+    <!--      <div class="field">-->
+    <!--        <label for="nickname">ユーザー名</label>-->
+    <!--        <input v-model="nickname" type="text" id="nickname" name="nickname" placeholder="Nickname" />-->
+    <!--      </div>-->
 
-          <div class="field">
-            <label>年齢</label>
-            <div class="inline fields">
-              <div class="field">
-                <input v-model.number="start" type="text" id="agestart" name="agestart"/>
-                <label for="agestart">歳から</label>
-              </div>
+    <!--      <div class="field">-->
+    <!--        <label>年齢</label>-->
+    <!--        <div class="inline fields">-->
+    <!--          <div class="field">-->
+    <!--            <input v-model.number="start" type="text" id="agestart" name="agestart"/>-->
+    <!--            <label for="agestart">歳から</label>-->
+    <!--          </div>-->
 
-              <div class="field">
-                <input v-model.number="end" type="text" id="ageend" name="ageend"/>
-                <label for="ageend">歳まで</label>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
+    <!--          <div class="field">-->
+    <!--            <input v-model.number="end" type="text" id="ageend" name="ageend"/>-->
+    <!--            <label for="ageend">歳まで</label>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </form>-->
+    <!--  </div>-->
 
       <!-- ユーザー一覧 -->
-      <ul class="ui three column grid">
-        <template v-for="(item, index) in filteredUsers" :key="index">
-          <li class="column">
-            <div class="ui card fluid" >
-              <div class="content">
-                <h2 class="header">
-                  {{ item.nickname }}
-                  <span class="ui green label">{{ item.age }}</span>
-                </h2>
-                <span class="meta">{{ item.userId }} </span>
-              </div>
-            </div>
-          </li>
-        </template>
-      </ul>
+    <!--  <ul class="ui three column grid">-->
+    <!--    <template v-for="(item, index) in filteredUsers" :key="index">-->
+    <!--      <li class="column">-->
+    <!--        <div class="ui card fluid" >-->
+    <!--          <div class="content">-->
+    <!--            <h2 class="header">-->
+    <!--              {{ item.nickname }}-->
+    <!--              <span class="ui green label">{{ item.age }}</span>-->
+    <!--            </h2>-->
+    <!--            <span class="meta">{{ item.userId }} </span>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </li>-->
+    <!--    </template>-->
+    <!--  </ul>-->
+    <!--</div>-->
     </div>
   </div>
 </template>
