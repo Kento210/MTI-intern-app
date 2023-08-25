@@ -10,7 +10,7 @@
               <div class="item">
                 <img class="ui small image" src="../assets/Bulkbuddy_rogo.png" alt="Bulkbuddy_rogo">
                 <div class="content vertical-align-parent">
-                  <p class="vertical-align-child">{{ user.name }}さん、こんにちは！</p>
+                  <p class="vertical-align-child">{{ this.user.name }}さん、こんにちは！</p>
                 </div>
               </div>
             </div>
@@ -100,7 +100,7 @@
   // import something from '@/components/something.vue';
   import { baseUrl } from '@/assets/config.js';
 
-  // const headers = { 'Authorization': 'mtiToken' };
+  const headers = { 'Authorization': 'mtiToken' };
 
   export default {
     name: 'Profile',
@@ -178,7 +178,7 @@
           const res = await fetch(baseUrl + '/user', {
             method: 'PUT',
             body: JSON.stringify(reqBody),
-            // headers
+            headers
           });
 
           const text = await res.text();
@@ -211,7 +211,7 @@
           /* global fetch */
           const res = await fetch(`${baseUrl}/user?userId=${this.user.userId}`, {
             method: 'DELETE',
-            // headers
+            headers
           });
 
           const text = await res.text();
@@ -243,7 +243,7 @@
         /* global fetch */
         const res = await fetch(baseUrl + `/user?userId=${this.user.userId}`, {
           method: 'GET',
-          // headers
+          headers
         });
 
         const text = await res.text();
@@ -255,8 +255,11 @@
           throw new Error(errorMessage);
         }
 
-        this.user.nickname = jsonData.nickname;
-        this.user.age = jsonData.age;
+        console.log(jsonData)
+        this.user.targetWeight = jsonData.targetWeight;
+        this.user.userId = jsonData.userId;
+        this.user.name = jsonData.name;
+        this.user.height = jsonData.height;
       }
       catch (e) {
         this.errorMsg = `ユーザー情報取得時にエラーが発生しました: ${e}`;
