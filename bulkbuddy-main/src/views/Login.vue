@@ -265,7 +265,7 @@
             throw new Error(errorMessage);
           }
 
-          // window.localStorage.setItem('token', jsonData.token);
+          window.localStorage.setItem('token', jsonData.token);
           window.localStorage.setItem('userId', this.user.userId);
 
           this.$router.push({ name: 'Home' });
