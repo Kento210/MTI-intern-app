@@ -14,27 +14,27 @@ def handler(event, context):
     try:
         body = json.loads(event['body'])
         userId = body.get('userId', None)
-        password = body.get('password', None)
         
-        if userId is None or password is None:
+        if userId is None:
             return {
                 'statusCode': 400,
-                'body': json.dumps({'error': 'userId and password are required'})
+                'body': json.dumps({'error': 'userId is required'})
             }
 
+        # password のチェックを削除
         response = table.get_item(
             Key={
                 'userId': userId
             }
         )
         
-        if 'Item' not in response or response['Item'].get('password') != password:
+        if 'Item' not in response:
             return {
                 'statusCode': 404,
-                'body': json.dumps({'error': 'User not found or password incorrect'})
+                'body': json.dumps({'error': 'User not found'})
             }
 
-        update_data = {key: body[key] for key in body if key != 'userId' and key != 'password'}
+        update_data = {key: body[key] for key in body if key != 'userId'}
         update_expression = "SET " + ", ".join(f"#{k}=:{k}" for k in update_data)
         expression_values = {f":{k}": v for k, v in update_data.items()}
         expression_names = {f"#{k}": k for k in update_data}
@@ -43,7 +43,6 @@ def handler(event, context):
             Key={
                 'userId': userId
             },
-            # 予約語を入れちゃったので仕方なく強制的に動作するようにしてます
             UpdateExpression=update_expression,
             ExpressionAttributeValues=expression_values,
             ExpressionAttributeNames=expression_names
